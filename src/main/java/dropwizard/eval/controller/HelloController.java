@@ -2,6 +2,7 @@ package dropwizard.eval.controller;
 
 import com.codahale.metrics.annotation.Timed;
 import dropwizard.eval.model.HelloResponse;
+import dropwizard.eval.service.HelloService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,16 +16,16 @@ import java.util.Optional;
 public class HelloController {
 
     private final String defaultValue;
-    private final String template = "Hello %s";
+    private final HelloService helloService;
 
-    public HelloController(String defaultValue) {
+    public HelloController(String defaultValue, HelloService helloService) {
         this.defaultValue = defaultValue;
+        this.helloService = helloService;
     }
 
     @GET
     @Timed
     public HelloResponse hello(@QueryParam("name") Optional<String> name) {
-        final String message = String.format(template, name.orElse(defaultValue));
-        return new HelloResponse(message);
+        return helloService.hello(name.orElse(defaultValue));
     }
 }

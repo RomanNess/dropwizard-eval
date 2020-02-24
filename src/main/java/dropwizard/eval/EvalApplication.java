@@ -1,6 +1,7 @@
 package dropwizard.eval;
 
 import dropwizard.eval.controller.HelloController;
+import dropwizard.eval.service.HelloService;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -17,7 +18,10 @@ public class EvalApplication extends Application<EvalConfiguration> {
     }
 
     public void run(EvalConfiguration evalConfiguration, Environment environment) {
-        final HelloController helloController = new HelloController(evalConfiguration.getHelloConfiguration().getDefaultName());
+
+        HelloService helloService = new HelloService();
+
+        final HelloController helloController = new HelloController(evalConfiguration.getHelloConfiguration().getDefaultName(), helloService);
         environment.jersey().register(helloController);
 
         final EvalHealthCheck evalHealthCheck = new EvalHealthCheck();
