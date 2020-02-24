@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dropwizard.eval.EvalApplication;
 import dropwizard.eval.EvalConfiguration;
 import dropwizard.eval.model.HelloResponse;
+import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(DropwizardExtensionsSupport.class)
 class HelloControllerTest {
 
-    public static final DropwizardAppExtension<EvalConfiguration> APP = new DropwizardAppExtension<>(EvalApplication.class);
+    public static final DropwizardAppExtension<EvalConfiguration> APP =
+            new DropwizardAppExtension<>(EvalApplication.class, ResourceHelpers.resourceFilePath("config-test.yml"));
 
     private static ObjectMapper mapper;
     private static int localPort;
@@ -31,7 +33,7 @@ class HelloControllerTest {
 
     @Test
     void hello() throws IOException {
-        assertThat(performGetRequest("/hello", HelloResponse.class).getMessage()).isEqualTo("Hello anonymous");
+        assertThat(performGetRequest("/hello", HelloResponse.class).getMessage()).isEqualTo("Hello TestDefault");
     }
 
     @Test

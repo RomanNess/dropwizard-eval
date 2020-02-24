@@ -14,8 +14,12 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class HelloController {
 
-    private String defaultValue = "anonymous";
-    private String template = "Hello %s";
+    private final String defaultValue;
+    private final String template = "Hello %s";
+
+    public HelloController(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 
     @GET
     @Timed

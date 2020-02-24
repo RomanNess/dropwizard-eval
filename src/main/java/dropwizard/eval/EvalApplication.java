@@ -16,8 +16,8 @@ public class EvalApplication extends Application<EvalConfiguration> {
         // nothing to do yet
     }
 
-    public void run(EvalConfiguration evalConfiguration, Environment environment) throws Exception {
-        final HelloController helloController = new HelloController();
+    public void run(EvalConfiguration evalConfiguration, Environment environment) {
+        final HelloController helloController = new HelloController(evalConfiguration.getHelloConfiguration().getDefaultName());
         environment.jersey().register(helloController);
 
         final EvalHealthCheck evalHealthCheck = new EvalHealthCheck();
