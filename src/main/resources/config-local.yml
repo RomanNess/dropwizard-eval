@@ -11,3 +11,8 @@ server:
     - type: http
       port: 8081
 
+database:
+  driverClass: org.postgresql.Driver
+  user: user
+  password: pass
+  url: jdbc:postgresql://localhost/db-local
