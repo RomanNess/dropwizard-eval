@@ -10,6 +10,7 @@ import dropwizard.eval.service.HelloService;
 import dropwizard.eval.service.UserService;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi3.JdbiFactory;
+import io.dropwizard.jdbi3.bundles.JdbiExceptionsBundle;
 import io.dropwizard.jetty.NonblockingServletHolder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -23,7 +24,7 @@ public class EvalApplication extends Application<EvalConfiguration> {
 
     @Override
     public void initialize(Bootstrap<EvalConfiguration> bootstrap) {
-        // nothing to do yet
+        bootstrap.addBundle(new JdbiExceptionsBundle());    // unwrap any thrown SQLException
     }
 
     public void run(EvalConfiguration evalConfiguration, Environment environment) {
