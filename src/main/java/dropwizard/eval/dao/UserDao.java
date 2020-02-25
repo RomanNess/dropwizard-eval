@@ -8,6 +8,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
 
+import java.util.List;
 import java.util.Optional;
 
 @RegisterRowMapper(UserMapper.class)
@@ -24,8 +25,17 @@ public interface UserDao {
     @SqlQuery("select max(id) from eval_user")
     Optional<Long> getMaxId();
 
+    @SqlQuery("select * from eval_user order by id asc")
+    List<User> findAllUsers();
+
     @SqlQuery("select id, username from eval_user where id = :id")
-    Optional<User> findNameById(@Bind("id") Long id);
+    Optional<User> findUserById(@Bind("id") Long id);
+
+    @SqlUpdate("update eval_user set username = :username where id = :id")
+    void updateUser(@Bind("id") Long id, @Bind("username") String username);
+
+    @SqlUpdate("delete from eval_user where id = :id")
+    void deleteUser(@Bind("id") Long userId);
 
     @Transaction
     default void resetTable() {
@@ -37,6 +47,17 @@ public interface UserDao {
     default User saveUser(User user) {
         Long newId = getMaxId().orElse(0L) + 1; // fixme poor man's index
         insert(newId, user.getUsername());
-        return findNameById(newId).orElse(null);
+        return findUserById(newId).orElse(null);
+    }
+
+    @Transaction
+    default User updateUser(User user) {
+        Optional<User> persistedUser = findUserById(user.getId());
+        if (persistedUser.isPresent()) {
+            updateUser(user.getId(), user.getUsername());
+            return user;
+        } else {
+            return saveUser(user);
+        }
     }
 }
